@@ -22,24 +22,31 @@ const Cart = () => {
   const isBreadPresent = check_for_bread(cartItems);
 
   let itemsPricing = {};
-  let subTotal = 0;
-  let savings = 0;
-  let amount = 0;
+  let subTotal = 0;  // Total cost without savings
+  let savings = 0;   // Total savings
+  let amount = 0;    // Total amount to be paid
+  
   cartItems.forEach((item) => {
-    let itemPrice = item.price * item.quantity;
-    let saving = check_for_offers(item, itemPrice, isSoupPresent);
-    let itemCost = itemPrice - saving;
-
-    subTotal += itemPrice;
-    savings += saving;
-    amount += itemCost;
-
+    const itemPrice = item.price * (item.quantity*2); // Total price before savings
+    const saving = check_for_offers(item, itemPrice, isSoupPresent); // Calculate savings
+  
+    const itemCost = 
+      item.id === 3 // For Cheese: Pay for all cheeses added (1:1 offer)
+        ? item.quantity * item.price
+        : itemPrice - saving; // Normal savings logic for other items
+  
+    subTotal += itemPrice; // Total cost without any offers
+    savings += saving;     // Accumulate total savings
+    amount += itemCost;    // Final amount after applying the offer
+  
     itemsPricing[item.id] = {
       itemPrice,
       saving,
       itemCost,
     };
   });
+  
+  
 
   const uploadToFirebase = async () => {
     try {
