@@ -22,30 +22,35 @@ const Cart = () => {
   const isBreadPresent = check_for_bread(cartItems);
 
   let itemsPricing = {};
-  let subTotal = 0;  // Total cost without savings
-  let savings = 0;   // Total savings
-  let amount = 0;    // Total amount to be paid
-  
-  cartItems.forEach((item) => {
-    const itemPrice = item.price * (item.quantity*2); // Total price before savings
-    const saving = check_for_offers(item, itemPrice, isSoupPresent); // Calculate savings
-  
-    const itemCost = 
-      item.id === 3 // For Cheese: Pay for all cheeses added (1:1 offer)
-        ? item.quantity * item.price
-        : itemPrice - saving; // Normal savings logic for other items
-  
-    subTotal += itemPrice; // Total cost without any offers
-    savings += saving;     // Accumulate total savings
-    amount += itemCost;    // Final amount after applying the offer
-  
-    itemsPricing[item.id] = {
-      itemPrice,
-      saving,
-      itemCost,
-    };
-  });
-  
+let subTotal = 0;  // Total cost of the items you're paying for
+let savings = 0;   // Total savings
+let amount = 0;    // Total amount to be paid
+
+cartItems.forEach((item) => {
+  const itemPrice = item.price * item.quantity; // Total price before offers
+
+  // Calculate savings using check_for_offers
+  const saving = check_for_offers(item);
+
+  // Calculate the total quantity (including free items)
+  const freeItems = saving / item.price; // Free items based on savings
+  const totalQuantity = item.quantity + freeItems;
+
+  // Subtotal is calculated as the total quantity times the price
+  const itemCost = totalQuantity * item.price;
+
+  subTotal += itemCost; // Total cost before any discounts
+  savings += saving;    // Accumulate savings (cost of free items)
+  amount += itemCost - saving; // Final amount to be paid (after subtracting savings)
+
+  itemsPricing[item.id] = {
+    itemPrice,
+    saving,
+    itemCost,
+  };
+});
+
+
   
 
   const uploadToFirebase = async () => {
@@ -138,3 +143,4 @@ const Cart = () => {
 };
 
 export default Cart;
+

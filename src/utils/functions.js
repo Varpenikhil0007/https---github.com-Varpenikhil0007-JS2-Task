@@ -18,27 +18,24 @@ export const check_for_bread = (cartItems) => {
   return false;
 };
 
-export const check_for_offers = (item, itemPrice, isSoupPresent) => {
-  let saving = 0;
+export const check_for_offers = (item) => {
+  let freeItems = 0;
 
   switch (item.id) {
-    case 1: // Bread
-      if (isSoupPresent) saving = itemPrice / 2;
-      break;
-
-      case 3: // Cheese (Buy 1 Get 1 Free)
-      // Calculate savings equal to the cost of one cheese per item
-      saving = item.quantity * item.price;
-      break;
-
-    case 5: // Butter
-      saving = itemPrice / 3; // 33% off
+    case 3: // Cheese logic
+      if (item.quantity === 1) {
+        freeItems = 1; // Special case: 1 cheese gets 1 free
+      } else {
+        freeItems = Math.floor(item.quantity / 2); // General case
+      }
       break;
 
     default:
-      saving = 0;
+      freeItems = 0; // No offers for other items
       break;
   }
 
-  return saving;
+  // Return savings as the cost of the free items
+  return freeItems * item.price;
 };
+
