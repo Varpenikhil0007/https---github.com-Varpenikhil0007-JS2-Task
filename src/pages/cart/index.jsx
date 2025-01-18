@@ -22,48 +22,42 @@ const Cart = () => {
 
   let itemsPricing = {};
   let subTotal = 0; // Total cost of items including free ones
-let savings = 0; // Total savings from offers
-let amount = 0; // Final amount to be paid
-
-cartItems.forEach((item) => {
-  let itemPrice = item.price * item.quantity; // Total price before offers
-  let saving = 0;
-  let itemCost = itemPrice;
-
-  // Special case for Cheese
-  if (item.id === 3) { // Assuming Cheese ID is 3
-    if (item.quantity === 1) {
-      itemPrice = 180; // Set item price to 180 for 1 cheese
-      saving = 180; // Saving is the full price of 1 cheese
-      itemCost = 180; // Item cost is 180 for 1 cheese
+  let savings = 0; // Total savings from offers
+  let amount = 0; // Final amount to be paid
+  
+  cartItems.forEach((item) => {
+    let itemPrice = item.price * item.quantity; // Total price before offers
+    let saving = 0;
+    let itemCost = itemPrice;
+  
+    // Special case for Cheese (ID: 3)
+    if (item.id === 3) { // Cheese ID = 3
+      // For any quantity of cheese, the total amount is simply price * quantity
+      itemPrice = item.price * item.quantity; // No discount applied here for cheese
+      saving = item.price * Math.floor(item.quantity / 2); // Savings for getting free cheeses
+      itemCost = itemPrice - saving; // Adjust item cost after savings (but final total stays as price * quantity)
     } else {
-      // For more than 1 cheese, apply the offer for free cheese
-      const freeCheeses = Math.floor(item.quantity / 2); // Free cheese for every 2 purchased
-      saving = freeCheeses * item.price; // Saving is the price of free cheeses
-      itemCost = item.price * item.quantity ; // Adjust the item cost after saving
+      // For all other items, apply the regular offer logic
+      const { saving: offerSaving, itemCost: offerItemCost } = check_for_offers(item, cartItems);
+      saving = offerSaving; // Assign savings for this item
+      itemCost = offerItemCost;
     }
-  } else {
-    // For all other items, apply the original offer logic
-    const { saving: offerSaving, itemCost: offerItemCost } = check_for_offers(item, cartItems);
-    saving = offerSaving; // Assign savings for this item
-    itemCost = offerItemCost;
-  }
-
-  // Add the current item's pricing to the itemsPricing object
-  itemsPricing[item.id] = {
-    itemPrice,
-    saving,
-    itemCost,
-  };
-
-  // Accumulate the total subTotal and savings
-  subTotal += itemPrice;  // Add item price before discounts
-  savings += saving;      // Add item savings
-});
-
-// After the loop, calculate the final amount
-amount = subTotal - savings;  // Final amount is total subTotal - total savings
-
+  
+    // Add the current item's pricing to the itemsPricing object
+    itemsPricing[item.id] = {
+      itemPrice,
+      saving,
+      itemCost,
+    };
+  
+    // Accumulate the total subTotal and savings
+    subTotal += itemPrice;  // Add item price before discounts
+    savings += saving;      // Add item savings
+  });
+  
+  // After the loop, calculate the final amount
+  amount = subTotal - savings;  // Final amount is total subTotal - total savings
+  
   
   const uploadToFirebase = async () => {
     // Empty the cart immediately
