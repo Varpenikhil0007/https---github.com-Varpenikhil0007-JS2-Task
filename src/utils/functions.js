@@ -15,7 +15,8 @@ export const check_for_offers = (item, cartItems) => {
     case 3: // Cheese Offer
       if (item.quantity === 1) {
         saving = item.price; // If 1 cheese, 1 free
-        itemCost = item.price; // Item cost equals item price when only 1 cheese
+        itemCost = item.price;
+         // Item cost equals item price when only 1 cheese
       } else {
         const freeCheeses = Math.floor(item.quantity / 2); // 1 free for every 2 purchased
         saving = freeCheeses * item.price;

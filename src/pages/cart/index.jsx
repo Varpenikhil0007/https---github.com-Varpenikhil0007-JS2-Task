@@ -22,24 +22,49 @@ const Cart = () => {
 
   let itemsPricing = {};
   let subTotal = 0; // Total cost of items including free ones
-  let savings = 0; // Total savings from offers
-  let amount = 0; // Final amount to be paid
+let savings = 0; // Total savings from offers
+let amount = 0; // Final amount to be paid
 
-  cartItems.forEach((item) => {
-    const itemPrice = item.price * item.quantity; // Total price before offers
-    const { saving, itemCost } = check_for_offers(item, cartItems);
+cartItems.forEach((item) => {
+  let itemPrice = item.price * item.quantity; // Total price before offers
+  let saving = 0;
+  let itemCost = itemPrice;
 
-    subTotal += itemPrice;
-    savings += saving;
-    amount = subTotal - savings;
+  // Special case for Cheese
+  if (item.id === 3) { // Assuming Cheese ID is 3
+    if (item.quantity === 1) {
+      itemPrice = 180; // Set item price to 180 for 1 cheese
+      saving = 180; // Saving is the full price of 1 cheese
+      itemCost = 180; // Item cost is 180 for 1 cheese
+    } else {
+      // For more than 1 cheese, apply the offer for free cheese
+      const freeCheeses = Math.floor(item.quantity / 2); // Free cheese for every 2 purchased
+      saving = freeCheeses * item.price; // Saving is the price of free cheeses
+      itemCost = item.price * item.quantity ; // Adjust the item cost after saving
+    }
+  } else {
+    // For all other items, apply the original offer logic
+    const { saving: offerSaving, itemCost: offerItemCost } = check_for_offers(item, cartItems);
+    saving = offerSaving; // Assign savings for this item
+    itemCost = offerItemCost;
+  }
 
-    itemsPricing[item.id] = {
-      itemPrice,
-      saving,
-      itemCost,
-    };
-  });
+  // Add the current item's pricing to the itemsPricing object
+  itemsPricing[item.id] = {
+    itemPrice,
+    saving,
+    itemCost,
+  };
 
+  // Accumulate the total subTotal and savings
+  subTotal += itemPrice;  // Add item price before discounts
+  savings += saving;      // Add item savings
+});
+
+// After the loop, calculate the final amount
+amount = subTotal - savings;  // Final amount is total subTotal - total savings
+
+  
   const uploadToFirebase = async () => {
     // Empty the cart immediately
     dispatch(emptyCart());
