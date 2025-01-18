@@ -1,9 +1,8 @@
-// Updated `index.jsx` with consistent styling for invoice fields
-
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import Product from "../../components/Product";
 import InvoiceModal from "./InvoiceModal";
+
 
 const Home = () => {
   // Fetch products and cart items from the Redux store
@@ -17,11 +16,20 @@ const Home = () => {
   const [dueDate, setDueDate] = useState("");
   const [notes, setNotes] = useState("");
 
-  // Calculate subtotal and total for the invoice
+  // Calculate subtotal and total for the invoice including discounts
   const subTotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const taxRate = 0.18; // Example tax rate (18%)
+
+  // Calculate savings from offers (assuming `check_for_offers` is a utility function)
+  let totalSavings = 0;
+  cartItems.forEach((item) => {
+    totalSavings += item.saving || 0; // Include savings (if any) from the item
+  });
+
+  const taxRate = 0; // Example tax rate (18%)
   const taxAmount = subTotal * taxRate;
-  const total = subTotal + taxAmount;
+
+  // Calculate final total after applying discounts and tax
+  const total = subTotal - totalSavings + taxAmount;
 
   // Get current date
   const currentDate = new Date().toISOString().split("T")[0];
@@ -106,5 +114,3 @@ const Home = () => {
 };
 
 export default Home;
-
-// Ensure the InvoiceModal component is updated to display these fields in a consistent format.

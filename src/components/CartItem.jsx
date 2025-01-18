@@ -1,3 +1,4 @@
+
 import { useDispatch, useSelector } from "react-redux";
 
 import { addToCart, removeFromCart } from "../features/cartSlice";
@@ -77,14 +78,14 @@ const CartItem = ({ item, itemsPricing, isSoupPresent, isBreadPresent }) => {
         </p>
         {itemsPricing[item.id]?.saving > 0 && (
           <p className="text-sm text-red-500">
-            You saved ₹ {itemsPricing[item.id]?.saving}
+            Saving: ₹ {itemsPricing[item.id]?.saving}
           </p>
         )}
-        {item.id === 3 && (
+        {/* {item.id === 3 && (
           <p className="text-sm text-red-500">
             {item.quantity} free cheese will be added!
           </p>
-        )}
+        )} */}
         <p className="font-medium">
           Item Cost: ₹ {itemsPricing[item.id]?.itemCost}
         </p>

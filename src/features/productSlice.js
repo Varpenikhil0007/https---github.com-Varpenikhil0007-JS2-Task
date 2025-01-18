@@ -26,7 +26,7 @@ const initialState = {
         {
           id: 1,
           name: "Bread",
-          price: 30,
+          price: 110,
           image:
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHqogGlCZ97donu43JwRhnDnqGmwy_NqIFIA&s",
         },
@@ -48,7 +48,7 @@ const initialState = {
         {
           id: 4,
           name: "Soup",
-          price: 100,
+          price: 60,
           offer: <p> Buy a soup and get  <br />Bread for half the price!</p>,
           image:
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDXRbY8plDoDCKi41jYZvCH3v6x2f9ADlVdg&s",
@@ -56,8 +56,8 @@ const initialState = {
         {
           id: 5,
           name: "Butter",
-          price: 150,
-          offer: "Get 33% off!",
+          price: 120,
+          offer: "Get 33% off!",                 
           offer_id: 1,
           image:
             "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/%C5%A0v%C3%A9dsk%C3%BD_kol%C3%A1%C4%8D_naruby_904_%28cropped%29.JPG/600px-%C5%A0v%C3%A9dsk%C3%BD_kol%C3%A1%C4%8D_naruby_904_%28cropped%29.JPG",
