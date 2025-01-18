@@ -52,7 +52,7 @@ const Cart = () => {
   
     // Accumulate the total subTotal and savings
     subTotal += itemPrice;  // Add item price before discounts
-    savings += saving;      // Add item savings
+    savings += saving;      // Add item 
   });
   
   // After the loop, calculate the final amount
